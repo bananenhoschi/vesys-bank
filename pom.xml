@@ -1,0 +1,19 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>fhnw.vesys.bank</groupId>
+	<artifactId>bank</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+
+    <name>VESYS Bank</name>
+    <url>https://github.com/bananenhoschi/vesys-bank</url>
+	
+	<modules>
+		<module>bank-common</module>
+		<module>bank-client</module>
+		<module>bank-server</module>
+	</modules>
+	
+</project>

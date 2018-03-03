@@ -1,0 +1,6 @@
+bank-client/.settings
+bank-client/target
+bank-common/.settings
+bank-common/target
+bank-server/.settings
+bank-server/target
