@@ -8,7 +8,9 @@ package bank.gui.tests;
 import bank.Bank;
 
 public interface BankTest {
-	String getName();
-	boolean isEnabled(int size);
-	String runTests(Bank bank, String currentAccountNumber) throws Exception;
+    String getName();
+
+    boolean isEnabled(int size);
+
+    String runTests(Bank bank, String currentAccountNumber) throws Exception;
 }

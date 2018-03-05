@@ -2,15 +2,15 @@ package bank.response;
 
 public class CreateAccountResponse implements Response {
 
-	private static final long serialVersionUID = 7183191349034929043L;
+    private static final long serialVersionUID = 7183191349034929043L;
 
-	private String number;
+    private String number;
 
-	public void setNumber(String number) {
-		this.number = number;
-	}
+    public CreateAccountResponse(String number) {
+        this.number = number;
+    }
 
-	public String getNumber() {
-		return number;
-	}
+    public String getNumber() {
+        return number;
+    }
 }

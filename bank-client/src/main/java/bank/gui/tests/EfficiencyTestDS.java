@@ -1,15 +1,15 @@
 package bank.gui.tests;
 
 public class EfficiencyTestDS extends EfficiencyTest {
-	final static int NUMBER_OF_EFF_TESTS = 1000;
+    final static int NUMBER_OF_EFF_TESTS = 1000;
 
-	public EfficiencyTestDS() {
-		super(NUMBER_OF_EFF_TESTS);
-	}
+    public EfficiencyTestDS() {
+        super(NUMBER_OF_EFF_TESTS);
+    }
 
-	@Override
-	public String getName() {
-		return "Efficiency Test (DS)";
-	}
+    @Override
+    public String getName() {
+        return "Efficiency Test (DS)";
+    }
 
 }

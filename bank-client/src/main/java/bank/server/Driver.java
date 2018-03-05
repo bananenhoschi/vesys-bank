@@ -15,60 +15,64 @@ import bank.request.Request;
 
 public class Driver implements bank.BankDriver {
 
-	private RemoteBank bank = null;
-	private Socket s;
+    private RemoteBank bank = null;
+    private Socket s;
+    private ObjectInputStream inputstream;
+    private ObjectOutputStream outputstream;
 
-	public Driver() {
-		bank = new RemoteBank(this);
-	}
+    public Driver() {
+        bank = new RemoteBank(this);
+    }
 
-	@Override
-	public void connect(String[] args) {
+    @Override
+    public void connect(String[] args) {
 
-		final String host = args[0];
-		final String port = args[1];
+        final String host = args[0];
+        final String port = args[1];
 
-		try {
-			s = new Socket(host, Integer.parseInt(port));
-		} catch (NumberFormatException | IOException e) {
-			e.printStackTrace();
-		}
-	}
+        try {
+            s = new Socket(host, Integer.parseInt(port));
+            outputstream = new ObjectOutputStream(s.getOutputStream());
+            inputstream = new ObjectInputStream(s.getInputStream());
+        } catch (NumberFormatException | IOException e) {
+            e.printStackTrace();
+            // TODO ich w�rde hier eine IOException werfen
+        }
+    }
 
-	@Override
-	public void disconnect() {
-		try {
-			s.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println("disconnected...");
-	}
+    @Override
+    public void disconnect() {
+        try {
+            s.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("disconnected...");
+    }
 
-	@Override
-	public Bank getBank() {
-		return bank;
-	}
+    @Override
+    public Bank getBank() {
+        return bank;
+    }
 
-	public <T> T sendRequestAndReceiveResult(Request request, Class<T> clazz) throws IOException {
+    public <T> T sendRequestAndReceiveResult(Request request, Class<T> clazz) throws IOException {
 
-		try {
-			if (s.isClosed()) {
-				System.out.println("closed");
-				return null;
-			}
-			ObjectOutputStream outputstream = new ObjectOutputStream(s.getOutputStream());
-			outputstream.writeObject(request);
-			outputstream.flush();
+        try {
+            if (s.isClosed()) {
+                System.out.println("closed");
+                return null;
+            }
 
-			ObjectInputStream inputstream = new ObjectInputStream(s.getInputStream());
-			T response = clazz.cast(inputstream.readObject());
+            outputstream.writeObject(request);
+            outputstream.flush();
 
-			return response;
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+            T response = clazz.cast(inputstream.readObject());
+
+            return response;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

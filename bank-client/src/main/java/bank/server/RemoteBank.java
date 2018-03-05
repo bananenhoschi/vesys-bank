@@ -20,49 +20,51 @@ import bank.response.TransferResponse;
 
 public class RemoteBank implements Bank {
 
-	private Driver driver;
+    private final Driver driver;
 
-	public RemoteBank(Driver driver) {
-		this.driver = driver;
-	}
+    public RemoteBank(Driver driver) {
+        this.driver = driver;
+    }
 
-	@Override
-	public String createAccount(String owner) throws IOException {
-		CreateAccountResponse response = driver.sendRequestAndReceiveResult(new CreateAccountRequest(owner),
-				CreateAccountResponse.class);
-		return response.getNumber();
-	}
+    @Override
+    public String createAccount(String owner) throws IOException {
+        CreateAccountResponse response = driver.sendRequestAndReceiveResult(new CreateAccountRequest(owner),
+                CreateAccountResponse.class);
+        return response.getNumber();
+    }
 
-	@Override
-	public boolean closeAccount(String number) throws IOException {
-		CloseAccountResponse response = driver.sendRequestAndReceiveResult(new CloseAccountRequest(number),
-				CloseAccountResponse.class);
-		return response.isAccountClosed();
-	}
+    @Override
+    public boolean closeAccount(String number) throws IOException {
+        CloseAccountResponse response = driver.sendRequestAndReceiveResult(new CloseAccountRequest(number),
+                CloseAccountResponse.class);
+        return response.isAccountClosed();
+    }
 
-	@Override
-	public Set<String> getAccountNumbers() throws IOException {
-		GetAccountNumbersResponse response = driver.sendRequestAndReceiveResult(new GetAccountNumbersRequest(),
-				GetAccountNumbersResponse.class);
-		return response.getAccountNumbers();
-	}
+    @Override
+    public Set<String> getAccountNumbers() throws IOException {
+        GetAccountNumbersResponse response = driver.sendRequestAndReceiveResult(new GetAccountNumbersRequest(),
+                GetAccountNumbersResponse.class);
+        return response.getAccountNumbers();
+    }
 
-	@Override
-	public Account getAccount(String number) throws IOException {
-		GetAccountResponse response = driver.sendRequestAndReceiveResult(new GetAccountRequest(number),
-				GetAccountResponse.class);
-		return response.getAccount();
-	}
+    @Override
+    public Account getAccount(String number) throws IOException {
+        GetAccountResponse response = driver.sendRequestAndReceiveResult(new GetAccountRequest(number),
+                GetAccountResponse.class);
+        return response.getAccount(); // TODO hier muss ein RemoteAccount zur�ckgegeben werden, also ein Objekt das
+                                      // auch in diesem Projekt dekaliert ist und welches die Anfragen an den Server
+                                      // weiterleitet
+    }
 
-	@Override
-	public void transfer(Account a, Account b, double amount)
-			throws IOException, IllegalArgumentException, OverdrawException, InactiveException {
-		TransferRequest request = new TransferRequest();
-		request.setFrom(a);
-		request.setTo(b);
-		request.setAmount(amount);
-		driver.sendRequestAndReceiveResult(request, TransferResponse.class);
-		return;
-	}
+    @Override
+    public void transfer(Account a, Account b, double amount)
+            throws IOException, IllegalArgumentException, OverdrawException, InactiveException {
+        TransferRequest request = new TransferRequest();
+        request.setFrom(a);
+        request.setTo(b);
+        request.setAmount(amount);
+        driver.sendRequestAndReceiveResult(request, TransferResponse.class);
+        return;
+    }
 
 }

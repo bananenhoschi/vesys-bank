@@ -1,0 +1,6 @@
+rootProject.name = 'bank-baumann'
+
+include ':bank-baumann-common'
+include ':bank-baumann-client'
+include ':bank-baumann-server'
+
