@@ -11,7 +11,7 @@ import bank.Bank;
 import bank.InactiveException;
 import bank.OverdrawException;
 
-public class RemoteBank implements Bank {
+public class SocketBank implements Bank {
 
     private final Map<String, Account> accounts = new HashMap<>();
 

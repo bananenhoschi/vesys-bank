@@ -18,11 +18,11 @@ import bank.response.GetAccountNumbersResponse;
 import bank.response.GetAccountResponse;
 import bank.response.TransferResponse;
 
-public class RemoteBank implements Bank {
+public class SocketBankProxy implements Bank {
 
     private final Driver driver;
 
-    public RemoteBank(Driver driver) {
+    public SocketBankProxy(Driver driver) {
         this.driver = driver;
     }
 
@@ -51,17 +51,17 @@ public class RemoteBank implements Bank {
     public Account getAccount(String number) throws IOException {
         GetAccountResponse response = driver.sendRequestAndReceiveResult(new GetAccountRequest(number),
                 GetAccountResponse.class);
-        return response.getAccount(); // TODO hier muss ein RemoteAccount zur�ckgegeben werden, also ein Objekt das
-                                      // auch in diesem Projekt dekaliert ist und welches die Anfragen an den Server
-                                      // weiterleitet
+        if(response.isAccountExists()) {
+        }
+        return new AccountProxy(number, driver);
     }
 
     @Override
     public void transfer(Account a, Account b, double amount)
             throws IOException, IllegalArgumentException, OverdrawException, InactiveException {
         TransferRequest request = new TransferRequest();
-        request.setFrom(a);
-        request.setTo(b);
+        request.setFrom(a.getNumber());
+        request.setTo(b.getNumber());
         request.setAmount(amount);
         driver.sendRequestAndReceiveResult(request, TransferResponse.class);
         return;

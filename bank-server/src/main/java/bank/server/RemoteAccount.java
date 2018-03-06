@@ -1,12 +1,14 @@
 package bank.server;
 
+import java.io.Serializable;
+
 import bank.Account;
 import bank.InactiveException;
 import bank.OverdrawException;
 
-public class RemoteAccount implements Account {
+public class RemoteAccount implements Account, Serializable {
 
-    private static final long serialVersionUID = 2611581837155433509L;
+    private static final long serialVersionUID = 7871801796664627335L;
 
     private final String number;
     private final String owner;
@@ -41,7 +43,7 @@ public class RemoteAccount implements Account {
     @Override
     public void deposit(double amount) throws InactiveException {
 
-        if (amount <= 0) {
+        if (amount < 0) {
             throw new IllegalArgumentException("Amount is less than 0.0.");
         }
 

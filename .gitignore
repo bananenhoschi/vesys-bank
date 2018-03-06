@@ -4,3 +4,4 @@ bank-common/.settings
 bank-common/target
 bank-server/.settings
 bank-server/target
+.gradle

@@ -1,19 +1,19 @@
 package bank.response;
 
-import bank.Account;
-
 public class GetAccountResponse implements Response {
 
     private static final long serialVersionUID = -8718510975127203268L;
 
-    private Account account;
+    private boolean accountExists;
 
-    public GetAccountResponse(Account account) {
-        this.account = account;
+    public GetAccountResponse(boolean accountExists) {
+        this.accountExists = accountExists;
     }
 
-    public Account getAccount() {
-        return account;
+    public boolean isAccountExists() {
+        return accountExists;
     }
+
+
 
 }

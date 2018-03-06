@@ -6,8 +6,8 @@ public class TransferRequest implements Request {
 
     private static final long serialVersionUID = 4712766634209668479L;
     private double amount;
-    private Account from;
-    private Account to;
+    private String from;
+    private String to;
 
     public double getAmount() {
         return amount;
@@ -17,19 +17,19 @@ public class TransferRequest implements Request {
         this.amount = amount;
     }
 
-    public Account getFrom() {
+    public String getFrom() {
         return from;
     }
 
-    public void setFrom(Account from) {
+    public void setFrom(String from) {
         this.from = from;
     }
 
-    public Account getTo() {
+    public String getTo() {
         return to;
     }
 
-    public void setTo(Account to) {
+    public void setTo(String to) {
         this.to = to;
     }
 

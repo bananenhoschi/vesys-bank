@@ -15,13 +15,13 @@ import bank.request.Request;
 
 public class Driver implements bank.BankDriver {
 
-    private RemoteBank bank = null;
+    private SocketBankProxy bank = null;
     private Socket s;
     private ObjectInputStream inputstream;
     private ObjectOutputStream outputstream;
 
     public Driver() {
-        bank = new RemoteBank(this);
+        bank = new SocketBankProxy(this);
     }
 
     @Override
@@ -35,8 +35,7 @@ public class Driver implements bank.BankDriver {
             outputstream = new ObjectOutputStream(s.getOutputStream());
             inputstream = new ObjectInputStream(s.getInputStream());
         } catch (NumberFormatException | IOException e) {
-            e.printStackTrace();
-            // TODO ich w�rde hier eine IOException werfen
+            throw new RuntimeException(e);
         }
     }
 

@@ -1,38 +1,27 @@
 package bank.response;
 
-import bank.Account;
-
 public class TransferResponse implements Response {
 
     private static final long serialVersionUID = -7217608924884722460L;
 
-    private Account from;
-    private Account to;
+    private boolean success;
 
-    private Exception exception;
+    private Throwable t;
 
-    public Account getFrom() {
-        return from;
+    public boolean success() {
+        return success;
+    }
+    
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
-    public void setFrom(Account from) {
-        this.from = from;
+    public void setThrowable(Throwable t) {
+        this.t = t;
     }
 
-    public Account getTo() {
-        return to;
-    }
-
-    public void setTo(Account to) {
-        this.to = to;
-    }
-
-    public void setException(Exception e) {
-        this.exception = e;
-    }
-
-    public Exception geException() {
-        return exception;
+    public Throwable getThrowable() {
+        return t;
     }
 
 }

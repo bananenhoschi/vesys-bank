@@ -4,15 +4,15 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class BankServer {
+public class SocketBankServer {
 
-    private RemoteBank bank;
+    private SocketBank bank;
 
     // private final static Logger LOG = LogManager.getLogger(BankServer.class);
 
-    private BankServer(int port) throws IOException {
+    private SocketBankServer(int port) throws IOException {
 
-        bank = new RemoteBank();
+        bank = new SocketBank();
 
         try (ServerSocket server = new ServerSocket(port)) {
             System.out.println("Started Server on port " + port);
@@ -29,7 +29,7 @@ public class BankServer {
     }
 
     public static void main(String[] args) throws IOException {
-        new BankServer(8989);
+        new SocketBankServer(8989);
     }
 
 }
