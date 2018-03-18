@@ -29,6 +29,7 @@ import bank.response.IsActiveResponse;
 import bank.response.Response;
 import bank.response.TransferResponse;
 import bank.response.WithdrawResponse;
+import bank.server.CommandHandler;
 import bank.server.RemoteBank;
 
 public class RequestProcessor implements Runnable {
@@ -36,12 +37,14 @@ public class RequestProcessor implements Runnable {
     private final RemoteBank bank;
     private final ObjectOutputStream out;
     private final ObjectInputStream in;
+    private final CommandHandler commandHandler;
 
     public RequestProcessor(RemoteBank bank, Socket socket) throws IOException {
         this.bank = bank;
         this.socket = socket;
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
+        commandHandler = new CommandHandler(this.bank);
 
     }
 
@@ -51,77 +54,7 @@ public class RequestProcessor implements Runnable {
             while (true) {
                 Request req = receiveRequest();
                 Command command = getCommand(req.getClass().getSimpleName());
-                Response response = null;
-                switch (command) {
-                case getaccountnumbers:
-                    response = new GetAccountNumbersResponse();
-                    ((GetAccountNumbersResponse) response).setAccountNumbers(bank.getAccountNumbers());
-                    break;
-                case createaccount:
-                    String number = bank.createAccount(((CreateAccountRequest) req).getOwner());
-                    response = new CreateAccountResponse(number);
-                    break;
-                case getaccount: {
-                    Account account = bank.getAccount(((GetAccountRequest) req).getNumber());
-                    response = new GetAccountResponse(account != null);
-                    break;
-                }
-                case closeaccount:
-                    boolean isAccountClosed = bank.closeAccount(((CloseAccountRequest) req).getNumber());
-                    response = new CloseAccountResponse(isAccountClosed);
-                    break;
-                case transfer:
-                    response = new TransferResponse();
-                    try {
-                        Account from = bank.getAccount(((TransferRequest) req).getFrom());
-                        Account to = bank.getAccount(((TransferRequest) req).getTo());
-                        bank.transfer(from, to, ((TransferRequest) req).getAmount());
-                        ((TransferResponse) response).setSuccess(true);
-
-                    } catch (Exception e) {
-                        ((TransferResponse) response).setThrowable(e);
-                    }
-                    break;
-                case deposit: {
-                    Account account = bank.getAccount(((DepositRequest) req).getNumber());
-                    response = new DepositResponse();
-                    try {
-                        account.deposit(((DepositRequest) req).getAmount());
-                        ((DepositResponse) response).setSuccess(true);
-                    } catch (IllegalArgumentException | InactiveException e) {
-                        ((DepositResponse) response).setThrowable(e);
-                    }
-                    break;
-                }
-                case withdraw: {
-                    Account account = bank.getAccount(((WithdrawRequest) req).getNumber());
-                    response = new WithdrawResponse();
-                    try {
-                        account.withdraw(((WithdrawRequest) req).getAmount());
-                        ((WithdrawResponse) response).setSuccess(true);
-                    } catch (IllegalArgumentException | InactiveException e) {
-                        ((WithdrawResponse) response).setThrowable(e);
-                    }
-                    break;
-                }
-                case getowner: {
-                    Account account = bank.getAccount(((GetOwnerRequest) req).getNumber());
-                    response = new GetOwnerResponse(account.getOwner());
-                    break;
-                }
-                case getbalance: {
-                    Account account = bank.getAccount(((GetBalanceRequest) req).getNumber());
-                    response = new GetBalanceResponse(account.getBalance());
-                    break;
-                }
-                case isactive: {
-                    Account account = bank.getAccount(((IsActiveRequest) req).getNumber());
-                    response = new IsActiveResponse(account.isActive());
-                    break;
-                }
-                default:
-                    throw new IOException("Invalid request type");
-                }
+                Response response = commandHandler.handleCommand(command, req);
                 sendResponse(response);
             }
         } catch (IOException e) {
