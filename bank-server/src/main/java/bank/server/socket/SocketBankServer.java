@@ -1,18 +1,20 @@
-package bank.server;
+package bank.server.socket;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import bank.server.RemoteBank;
+
 public class SocketBankServer {
 
-    private SocketBank bank;
+    private RemoteBank bank;
 
     // private final static Logger LOG = LogManager.getLogger(BankServer.class);
 
     private SocketBankServer(int port) throws IOException {
 
-        bank = new SocketBank();
+        bank = new RemoteBank();
 
         try (ServerSocket server = new ServerSocket(port)) {
             System.out.println("Started Server on port " + port);

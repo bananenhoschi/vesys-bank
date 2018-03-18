@@ -1,4 +1,4 @@
-package bank.server;
+package bank.server.socket;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -29,14 +29,15 @@ import bank.response.IsActiveResponse;
 import bank.response.Response;
 import bank.response.TransferResponse;
 import bank.response.WithdrawResponse;
+import bank.server.RemoteBank;
 
 public class RequestProcessor implements Runnable {
     private final Socket socket;
-    private final SocketBank bank;
+    private final RemoteBank bank;
     private final ObjectOutputStream out;
     private final ObjectInputStream in;
 
-    public RequestProcessor(SocketBank bank, Socket socket) throws IOException {
+    public RequestProcessor(RemoteBank bank, Socket socket) throws IOException {
         this.bank = bank;
         this.socket = socket;
         out = new ObjectOutputStream(socket.getOutputStream());
@@ -49,9 +50,6 @@ public class RequestProcessor implements Runnable {
         try {
             while (true) {
                 Request req = receiveRequest();
-                // TODO anstelle dieses kaskadierten if-Statements K�nnte man auch
-                // Polymorphismus verwenden indem man eine auf den Request-Objekten definierte
-                // Methode aufruft. => Command Pattern.
                 Command command = getCommand(req.getClass().getSimpleName());
                 Response response = null;
                 switch (command) {
