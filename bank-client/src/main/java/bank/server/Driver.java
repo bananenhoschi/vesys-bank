@@ -44,7 +44,6 @@ public class Driver implements bank.BankDriver {
         try {
             s.close();
         } catch (IOException e) {
-            e.printStackTrace();
         }
         System.out.println("disconnected...");
     }

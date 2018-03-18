@@ -73,9 +73,7 @@ public class RequestProcessor implements Runnable {
                     response = new CloseAccountResponse(isAccountClosed);
                     break;
                 case transfer:
-
                     response = new TransferResponse();
-
                     try {
                         Account from = bank.getAccount(((TransferRequest) req).getFrom());
                         Account to = bank.getAccount(((TransferRequest) req).getTo());
@@ -101,7 +99,7 @@ public class RequestProcessor implements Runnable {
                     Account account = bank.getAccount(((WithdrawRequest) req).getNumber());
                     response = new WithdrawResponse();
                     try {
-                        account.deposit(((WithdrawRequest) req).getAmount());
+                        account.withdraw(((WithdrawRequest) req).getAmount());
                         ((WithdrawResponse) response).setSuccess(true);
                     } catch (IllegalArgumentException | InactiveException e) {
                         ((WithdrawResponse) response).setThrowable(e);
@@ -128,9 +126,7 @@ public class RequestProcessor implements Runnable {
                 }
                 sendResponse(response);
             }
-        } catch (
-
-        IOException e) {
+        } catch (IOException e) {
             System.err.println(e.getMessage());
             throw new RuntimeException(e);
         } catch (Exception e) {

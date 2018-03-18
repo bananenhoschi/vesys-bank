@@ -48,13 +48,7 @@ public class RemoteAccount implements Account, Serializable {
         }
 
         if (isActive()) {
-            if (balance + amount < 0) {
-                return; // TODO ich w�rde hier einen Fehler ausgeben, aber das kann nie passieren da
-                        // amount > 0 ist, und der Datentyp double ist (bei int k�nnte es einen overflow
-                        // geben)
-            } else {
-                balance += amount;
-            }
+            balance += amount;
         } else {
             throw new InactiveException();
         }
@@ -72,6 +66,7 @@ public class RemoteAccount implements Account, Serializable {
                 throw new OverdrawException();
             } else {
                 balance = balance - amount;
+                active = !(balance == 0);
             }
         } else {
             throw new InactiveException();

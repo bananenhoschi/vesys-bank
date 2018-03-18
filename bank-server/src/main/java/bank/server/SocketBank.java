@@ -32,7 +32,6 @@ public class SocketBank implements Bank {
 
         Account acc = new RemoteAccount(owner);
         accounts.put(acc.getNumber(), acc);
-        System.out.println("Remote: account created");
         return acc.getNumber();
     }
 
