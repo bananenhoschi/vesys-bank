@@ -3,7 +3,7 @@
  * All Rights Reserved.
  */
 
-package bank.server;
+package bank.drivers;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -11,17 +11,20 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import bank.Bank;
-import bank.request.Request;
+import bank.BankDriver;
+import bank.Request;
+import bank.Response;
+import bank.server.ProxyBank;
 
-public class Driver implements bank.BankDriver {
+public class SocketDriver implements BankDriver {
 
-    private SocketBankProxy bank = null;
+    private ProxyBank bank = null;
     private Socket s;
     private ObjectInputStream inputstream;
     private ObjectOutputStream outputstream;
 
-    public Driver() {
-        bank = new SocketBankProxy(this);
+    public SocketDriver() {
+        bank = new ProxyBank(this);
     }
 
     @Override
@@ -53,8 +56,8 @@ public class Driver implements bank.BankDriver {
         return bank;
     }
 
-    public <T> T sendRequestAndReceiveResult(Request request, Class<T> clazz) throws IOException {
-
+    @Override
+    public Response handle(Request request) {
         try {
             if (s.isClosed()) {
                 System.out.println("closed");
@@ -64,10 +67,10 @@ public class Driver implements bank.BankDriver {
             outputstream.writeObject(request);
             outputstream.flush();
 
-            T response = clazz.cast(inputstream.readObject());
+            Response response = Response.class.cast(inputstream.readObject());
 
             return response;
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
         return null;

@@ -3,9 +3,12 @@
  * All Rights Reserved.
  */
 
-package bank.local;
+package bank.drivers;
 
 import bank.Bank;
+import bank.Request;
+import bank.Response;
+import bank.local.LocalBank;
 
 public class Driver implements bank.BankDriver {
     private Bank bank = null;
@@ -25,6 +28,11 @@ public class Driver implements bank.BankDriver {
     @Override
     public Bank getBank() {
         return bank;
+    }
+
+    @Override
+    public Response handle(Request request) {
+        return null;
     }
 
 }

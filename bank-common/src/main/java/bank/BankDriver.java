@@ -49,4 +49,7 @@ public interface BankDriver {
      * @see Bank
      */
     Bank getBank();
+    
+    Response handle(Request request);
+    
 }

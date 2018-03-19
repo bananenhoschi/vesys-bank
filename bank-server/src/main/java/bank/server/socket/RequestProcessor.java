@@ -5,46 +5,25 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import bank.Account;
 import bank.Command;
-import bank.InactiveException;
-import bank.request.CloseAccountRequest;
-import bank.request.CreateAccountRequest;
-import bank.request.DepositRequest;
-import bank.request.GetAccountRequest;
-import bank.request.GetBalanceRequest;
-import bank.request.GetOwnerRequest;
-import bank.request.IsActiveRequest;
-import bank.request.Request;
-import bank.request.TransferRequest;
-import bank.request.WithdrawRequest;
-import bank.response.CloseAccountResponse;
-import bank.response.CreateAccountResponse;
-import bank.response.DepositResponse;
-import bank.response.GetAccountNumbersResponse;
-import bank.response.GetAccountResponse;
-import bank.response.GetBalanceResponse;
-import bank.response.GetOwnerResponse;
-import bank.response.IsActiveResponse;
-import bank.response.Response;
-import bank.response.TransferResponse;
-import bank.response.WithdrawResponse;
-import bank.server.CommandHandler;
+import bank.Request;
+import bank.Response;
 import bank.server.RemoteBank;
+import bank.server.RequestHandler;
 
 public class RequestProcessor implements Runnable {
     private final Socket socket;
     private final RemoteBank bank;
     private final ObjectOutputStream out;
     private final ObjectInputStream in;
-    private final CommandHandler commandHandler;
+    private final RequestHandler requestHandler;
 
     public RequestProcessor(RemoteBank bank, Socket socket) throws IOException {
         this.bank = bank;
         this.socket = socket;
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
-        commandHandler = new CommandHandler(this.bank);
+        requestHandler = new RequestHandler(this.bank);
 
     }
 
@@ -53,8 +32,7 @@ public class RequestProcessor implements Runnable {
         try {
             while (true) {
                 Request req = receiveRequest();
-                Command command = getCommand(req.getClass().getSimpleName());
-                Response response = commandHandler.handleCommand(command, req);
+                Response response = requestHandler.handleRequest(req);
                 sendResponse(response);
             }
         } catch (IOException e) {
