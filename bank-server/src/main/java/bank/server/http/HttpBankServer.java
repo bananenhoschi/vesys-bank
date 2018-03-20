@@ -2,8 +2,6 @@ package bank.server.http;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 import com.sun.net.httpserver.HttpServer;
 
@@ -20,7 +18,7 @@ public class HttpBankServer {
         try {
             HttpServer httpServer = HttpServer.create(new InetSocketAddress(port), 0);
             httpServer.createContext("/", new RootHandler());
-            httpServer.createContext("/bank", new HttpRequestHandler());
+            httpServer.createContext("/bank", new HttpRequestHandler(bank));
 
             httpServer.setExecutor(null);
             httpServer.start();
